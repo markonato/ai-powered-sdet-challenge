@@ -1,10 +1,9 @@
 from datetime import datetime, timezone
 from typing import Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 
-from .models import Priority, Status
-
+from api.models import Priority, Status
 
 class TaskCreate(BaseModel):
     title: str = Field(..., min_length=1, max_length=100)

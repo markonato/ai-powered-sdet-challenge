@@ -1,61 +1,44 @@
-import inspect
 import os
+
 from dotenv import load_dotenv
-from agent.test_generator import generate_tests
-from agent.test_executor import run_tests
-from agent.analyzer import analyze_results
 from openai import OpenAIError, RateLimitError
 
-from tests import test_generated
+from agent.analyzer import analyze_results
+from agent.test_executor import run_tests
+from agent.test_generator import generate_tests
 
 load_dotenv()
 
 def run_ai_test_agent(api_spec: str):
     """
     Main AI test agent:
-    1. Generate tests (AI or mock)
+    1. Generate tests (AI)
     2. Execute tests via pytest
-    3. Analyze results (AI or mock)
+    3. Analyze results (AI)
     """
     # Step 1: Generate tests
-    print("🧠 Generating tests...")
-    num_of_tests = 0
     try:
         test_file_path = generate_tests(api_spec)
-        test_functions = [
-            name for name, _ in inspect.getmembers(test_generated, inspect.isfunction)
-            if name.startswith("test_")
-        ]
-        num_of_tests = len(test_functions)
-        print(f"✅ Generated {num_of_tests} test scenarios using AI at: {test_file_path}")
     except (RateLimitError, OpenAIError, Exception) as e:
         print(f"⚠️ OpenAI error or quota issue: {e}")
-        # --- Fallback when AI generation fails ---
-        fallback_path = os.path.join("tests", "test_fallback.py")
-        os.makedirs("tests", exist_ok=True)
-        with open(fallback_path, "w") as f:
-            f.write("def test_placeholder(): assert True\n")
+        test_file_path = "no_filepath"
 
-        test_file_path = fallback_path
-        print(f"🩹 Using fallback test file: {test_file_path}")
-
-    # Step 2: Ensure a valid test file exists before running
+    # Ensure a valid test file exists before running
     if not test_file_path or not os.path.exists(test_file_path):
         raise RuntimeError("❌ No valid test file found to execute")
 
     # Step 2: Execute tests
-    results_path = run_tests(test_file_path)
-    print(f"✅ Executed {num_of_tests} tests...")
+    summary = run_tests(test_file_path)
+    print("............\n")
+    print(f"✅ Generated {summary["num_generated_tests"]} test scenarios using AI")
+    print(f"✅ Executed {summary["num_executed_tests"]} tests in {summary["duration"]:.2f} seconds")
 
     # Step 3: Analyze results
-    print("🔍 Analyzing results...")
-    insights = analyze_results(results_path)
-
-    print("\n=== AI Insights ===")
+    insights = analyze_results(summary["result_file"])
+    print("\n🧠 AI Analysis:")
     print(insights)
 
     return insights
-
 
 if __name__ == "__main__":
     api_spec = """
@@ -67,4 +50,3 @@ PUT /tasks/{id} - update task
 DELETE /tasks/{id} - delete task
 PATCH /tasks/{id}/status - mark completed/pending
 """
-

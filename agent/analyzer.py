@@ -1,9 +1,14 @@
 import os
 import json
 from openai import OpenAI
+from dotenv import load_dotenv
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
+load_dotenv()
+api_key = os.getenv("OPENAI_API_KEY")
+if api_key:
+    client = OpenAI(api_key=api_key)
+else:
+    client = None
 
 def analyze_results(results_path: str) -> str:
     """Analyze pytest results with AI and summarize insights."""
@@ -17,6 +22,8 @@ def analyze_results(results_path: str) -> str:
         "errors": [t for t in data["tests"] if t["outcome"] == "failed"],
     }
 
+    print(f"📊 Results: {summary["passed"]} passed, {summary["failed"]} failed")
+
     prompt = f"""
 You are an expert QA analyst.
 Here are the pytest results:
@@ -27,8 +34,8 @@ Please:
 2. Identify common failure patterns or potential causes.
 3. Suggest improvements for test coverage or API robustness.
 4. Provide Executive summary at the end.
+5. Format your response clearly with section headers, fancy icons, text colors etc.
 """
-
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}],

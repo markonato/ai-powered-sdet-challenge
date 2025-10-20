@@ -7,7 +7,6 @@ load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 
 GENERATED_PATH = "tests/test_generated.py"
-NUM_TESTS = 0
 
 if api_key:
     client = OpenAI(api_key=api_key)
@@ -42,7 +41,7 @@ Return only valid Python code. Do not include explanations, bullet points, or Ma
 
     code = response.choices[0].message.content
 
-    # Strip non-Python lines: remove lines that start with "-", "`", "# " explanations, etc.
+    # Strip non-python lines: remove lines that start with "-", "`", "# " explanations, etc.
     valid_lines = []
     for line in code.splitlines():
         stripped = line.strip()

@@ -1,5 +1,5 @@
 from typing import List, Optional
-from .models import Task, Priority, Status
+from api.models import Task, Priority, Status
 
 class TaskStorage:
     def __init__(self):
