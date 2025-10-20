@@ -1,6 +1,7 @@
 import os
 from agent.ai_test_agent import run_ai_test_agent
 from agent.analyzer import analyze_results
+import pytest
 
 RESULTS_DIR = "results"
 
@@ -38,18 +39,7 @@ Description optional (max 500 chars)
 """
 
     # Step 2: Run AI agent to generate, execute, and analyze tests
-    print("\n🧠 Running AI Test Agent...")
+    print("\n🧠 AI Test Agent Starting...")
     run_ai_test_agent(api_spec)  # use mock=True to avoid quota issues
-
-    # Step 3: Smart Reporting
-    print("\n📝 Generating Smart Test Report...")
-    report_summary = analyze_results(
-        os.path.join(RESULTS_DIR, os.listdir(RESULTS_DIR)[0]),  # pick latest results JSON
-        #mock=True  # Use mock to avoid AI calls if needed
-    )
-
-    # Step 4: Show report
-    print("\n=== Smart Test Report ===")
-    print(report_summary)
 
     print("\n🎉 Demo complete! Check 'results/' folder and AI insights above.")

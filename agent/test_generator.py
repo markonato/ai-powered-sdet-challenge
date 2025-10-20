@@ -56,11 +56,8 @@ Return only valid Python code. Do not include explanations, bullet points, or Ma
         cleaned_code = "import pytest\n\ndef test_dummy():\n    assert 1 + 1 == 2\n"
 
     os.makedirs("tests", exist_ok=True)
-    file_path = "tests/test_generated.py"
+    file_path = GENERATED_PATH
     with open(file_path, "w") as f:
         f.write(cleaned_code)
 
-    NUM_TESTS = len(code)
-
     return file_path
-

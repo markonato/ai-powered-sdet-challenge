@@ -26,6 +26,7 @@ Please:
 1. Summarize the overall test quality.
 2. Identify common failure patterns or potential causes.
 3. Suggest improvements for test coverage or API robustness.
+4. Provide Executive summary at the end.
 """
 
     response = client.chat.completions.create(
