@@ -3,7 +3,7 @@ from datetime import datetime, timezone, timedelta
 from fastapi import FastAPI, HTTPException, Query, Response
 from typing import Optional, List
 
-from api.schemas import TaskStatusUpdate
+from api.models import TaskStatusUpdate
 from api.models import Task, TaskCreate, Priority, Status
 from api.storage import storage
 
@@ -67,7 +67,7 @@ def update_status(id: int, status_update: TaskStatusUpdate):
     if not existing_task:
         raise HTTPException(status_code=404, detail="Task not found")
     try:
-        new_status = Status(status_update.status)
+        Status(status_update.status)
     except ValueError:
         raise HTTPException(status_code=422, detail="Invalid status value")
     updated = storage.patch_status(id, status_update.status)

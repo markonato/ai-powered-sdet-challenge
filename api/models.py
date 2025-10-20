@@ -12,15 +12,21 @@ class Status(str, Enum):
     pending = "pending"
     completed = "completed"
 
-class TaskBase(BaseModel):
+class TaskCreate(BaseModel):
     title: str = Field(..., min_length=1, max_length=100)
     description: Optional[str] = Field(None, max_length=500)
     priority: Priority = Priority.medium
     due_date: datetime
-    status: Status = Status.pending
+    status: Optional[Status] = Status.pending
 
-class TaskCreate(TaskBase):
-    pass
-
-class Task(TaskBase):
+class Task(TaskCreate):
     id: int
+
+class TaskUpdate(BaseModel):
+    title: Optional[str] = Field(None, min_length=1, max_length=100)
+    description: Optional[str] = Field(None, max_length=500)
+    priority: Optional[Priority]
+    due_date: datetime
+
+class TaskStatusUpdate(BaseModel):
+    status: Status
