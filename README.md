@@ -99,6 +99,11 @@ Integration with CI/CD pipelines.
 Allow mock mode to run the demo without using real OpenAI API credits.
 ```
 
+---
+
+
+---
+
 # 🧠 AI Insight example
 
 ## Test Quality Analysis Report
