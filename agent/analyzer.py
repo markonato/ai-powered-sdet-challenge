@@ -33,8 +33,10 @@ Please:
 1. Summarize the overall test quality.
 2. Identify common failure patterns or potential causes.
 3. Suggest improvements for test coverage or API robustness.
-4. Provide Executive summary at the end.
-5. Format your response clearly with section headers, fancy icons, text colors etc.
+4. Analyze response times and suggest optimizations
+5. Categorize different types of failures
+6. Provide Executive summary at the end.
+7. Format your response clearly with section headers, bullets, fancy icons, text colors etc.
 """
     response = client.chat.completions.create(
         model="gpt-4o-mini",
